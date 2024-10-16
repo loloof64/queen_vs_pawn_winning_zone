@@ -15,13 +15,12 @@ function isCoordIndex(index: number): boolean {
 }
 
 function cellIndexToRankCoord(index: number): string {
-    return ["8", "7", "6", "5", "4", "3", "2", "1"][index / 10];
+    return ["8", "7", "6", "5", "4", "3", "2", "1"][Math.floor(index / 10)];
 }
 
 function isWhiteCell(index: number): boolean {
     const row = Math.floor(index / 10);
     const col = index % 10;
-    console.log(index, row+col)
     return (row + col) % 2 > 0;
 }
 </script>
