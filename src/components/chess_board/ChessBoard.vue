@@ -2,9 +2,10 @@
 interface Props {
     size?: String,
     fontSize?: String,
+    reversed?: boolean,
 };
 
-const { size = "95vmin", fontSize = "4vmin" } = defineProps<Props>()
+const { size = "95vmin", fontSize = "4vmin", reversed = false } = defineProps<Props>()
 
 function getMediumCellsArray(): string[] {
     return new Array(80);
@@ -15,7 +16,12 @@ function isCoordIndex(index: number): boolean {
 }
 
 function cellIndexToRankCoord(index: number): string {
-    return ["8", "7", "6", "5", "4", "3", "2", "1"][Math.floor(index / 10)];
+    const baseIndex = Math.floor(index / 10);
+    return ["8", "7", "6", "5", "4", "3", "2", "1"][reversed ? 7 - baseIndex : baseIndex];
+}
+
+function getFileCoordForCol(index: number): string {
+    return ["A", "B", "C", "D", "E", "F", "G", "H"][reversed ? 7 - index : index];
 }
 
 function isWhiteCell(index: number): boolean {
@@ -28,14 +34,14 @@ function isWhiteCell(index: number): boolean {
 <template>
     <div class="board_root">
         <div>&nbsp;</div>
-        <div class="coord">A</div>
-        <div class="coord">B</div>
-        <div class="coord">C</div>
-        <div class="coord">D</div>
-        <div class="coord">E</div>
-        <div class="coord">F</div>
-        <div class="coord">G</div>
-        <div class="coord">H</div>
+        <div class="coord">{{getFileCoordForCol(0)}}</div>
+        <div class="coord">{{getFileCoordForCol(1)}}</div>
+        <div class="coord">{{getFileCoordForCol(2)}}</div>
+        <div class="coord">{{getFileCoordForCol(3)}}</div>
+        <div class="coord">{{getFileCoordForCol(4)}}</div>
+        <div class="coord">{{getFileCoordForCol(5)}}</div>
+        <div class="coord">{{getFileCoordForCol(6)}}</div>
+        <div class="coord">{{getFileCoordForCol(7)}}</div>
         <div>&nbsp;</div>
         <template v-for="(_, cellIndex) in getMediumCellsArray()">
             <div class="coord" v-if="isCoordIndex(cellIndex)">{{ cellIndexToRankCoord(cellIndex) }}</div>
@@ -43,14 +49,14 @@ function isWhiteCell(index: number): boolean {
                 :class="{ 'white-cell': isWhiteCell(cellIndex), 'black-cell': !isWhiteCell(cellIndex) }"></div>
         </template>
         <div>&nbsp;</div>
-        <div class="coord">A</div>
-        <div class="coord">B</div>
-        <div class="coord">C</div>
-        <div class="coord">D</div>
-        <div class="coord">E</div>
-        <div class="coord">F</div>
-        <div class="coord">G</div>
-        <div class="coord">H</div>
+        <div class="coord">{{getFileCoordForCol(0)}}</div>
+        <div class="coord">{{getFileCoordForCol(1)}}</div>
+        <div class="coord">{{getFileCoordForCol(2)}}</div>
+        <div class="coord">{{getFileCoordForCol(3)}}</div>
+        <div class="coord">{{getFileCoordForCol(4)}}</div>
+        <div class="coord">{{getFileCoordForCol(5)}}</div>
+        <div class="coord">{{getFileCoordForCol(6)}}</div>
+        <div class="coord">{{getFileCoordForCol(7)}}</div>
         <div>&nbsp;</div>
     </div>
 </template>

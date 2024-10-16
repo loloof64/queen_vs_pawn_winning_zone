@@ -4,7 +4,7 @@ import ChessBoard from "@/components/chess_board/ChessBoard.vue";
 
 <template>
   <div id="main">
-    <ChessBoard size="80vmin"/>
+    <ChessBoard size="80vmin" reversed />
     <button>Submit</button>
   </div>
 </template>
