@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Queen vs pawn winning zone",
+  "productName": "queen_vs_pawn_winning_zone",
   "version": "0.1.0",
   "identifier": "com.loloof64.queen_vs_pawn_winning_zone",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "queen_vs_pawn_winning_zone",
+        "title": "Queen vs pawn winning zone",
         "width": 800,
         "height": 600
       }

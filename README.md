@@ -25,3 +25,9 @@ export WEBKIT_DISABLE_DMABUF_RENDERER=1
 ```bash
 npm run tauri dev
 ```
+
+## Credits
+
+### Images
+
+Icon has been downloaded from [FreePik](https://www.freepik.com/icon/chess-pieces_7729665#fromView=search&page=2&position=64&uuid=1e7f6a95-329e-4d4e-b17b-a6779925ba2b)
