@@ -19,6 +19,7 @@ const atLeastAGameStarted = ref(false);
 const indicationMessage = ref(t("indication-start"));
 const actionMessage = ref(t("action-start"));
 const legendModalActive = ref(false);
+const explanationsModalActive = ref(false);
 
 function handleCellClick(cellStr: string) {
   if (selectedCells.value.includes(cellStr)) {
@@ -71,6 +72,14 @@ function showLegendModal() {
 function closeLegendModal() {
   legendModalActive.value = false;
 }
+
+function showExplanations() {
+  explanationsModalActive.value = true;
+}
+
+function closeExplanationsModal() {
+  explanationsModalActive.value = false;
+}
 </script>
 
 <template>
@@ -78,6 +87,7 @@ function closeLegendModal() {
     <p>
       {{ indicationMessage }}
       <button v-if="answerMode" @click="showLegendModal">{{ t("action-see-legend") }}</button>
+      <button v-else-if="atLeastAGameStarted" @click="showExplanations">{{ t("action-see-explanations") }}</button>
     </p>
     <ChessBoard v-if="atLeastAGameStarted" size="65vmin" :fen="fen" :selectedCells="selectedCells"
       :correctCells="correctCells" :wrongCells="wrongCells" :missingCells="missingCells" @cellClick="handleCellClick"
@@ -108,6 +118,26 @@ function closeLegendModal() {
         <template #footer>
           <div class="legend-footer">
             <button @click="closeLegendModal">{{ t("action-close-modal") }}</button>
+          </div>
+        </template>
+      </modal>
+    </Teleport>
+
+    <Teleport to="body">
+      <modal :show="explanationsModalActive" @close="closeExplanationsModal">
+        <template #header>
+          <h3>{{ t("explanations-title") }}</h3>
+        </template>
+
+        <template #body>
+          <p class="explanation">{{ t("explanations-content-1") }}</p>
+          <p class="explanation">{{ t("explanations-content-2") }}</p>
+          <p class="explanation">{{ t("explanations-content-3") }}</p>
+        </template>
+
+        <template #footer>
+          <div class="explanations-footer">
+            <button @click="closeExplanationsModal">{{ t("action-close-modal") }}</button>
           </div>
         </template>
       </modal>
@@ -198,6 +228,17 @@ button:active {
 
 .bg-gray {
   background-color: gray;
+}
+
+p.explanation {
+  font-size: x-small;
+}
+
+
+.explanations-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 input,
