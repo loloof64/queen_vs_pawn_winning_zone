@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Ref, ref } from "vue";
 import ChessBoard from "@/components/chess_board/ChessBoard.vue";
-import generate from "./core/generator";
-import Exercice from "./core/exercice";
+import Modal from "@/components/Modal.vue";
+import generate from "@/core/generator";
+import Exercice from "@/core/exercice";
 
 const interactive = ref(false);
 const answerMode = ref(false);
-const exercice: Ref<Exercice|null> = ref(null);
+const exercice: Ref<Exercice | null> = ref(null);
 const selectedCells: Ref<Array<string>> = ref([]);
 const correctCells: Ref<Array<string>> = ref([]);
 const wrongCells: Ref<Array<string>> = ref([]);
@@ -15,6 +16,7 @@ const fen = ref("");
 const atLeastAGameStarted = ref(false);
 const indicationMessage = ref("Please, start a new game.");
 const actionMessage = ref("Start a new game");
+const legendModalActive = ref(false);
 
 function handleCellClick(cellStr: string) {
   if (selectedCells.value.includes(cellStr)) {
@@ -59,16 +61,56 @@ function showAnswer() {
   actionMessage.value = "New game";
   indicationMessage.value = "Here's the answer.";
 }
+
+function showLegendModal() {
+  legendModalActive.value = true;
+}
+
+function closeLegendModal() {
+  legendModalActive.value = false;
+}
 </script>
 
 <template>
   <div id="main">
     <p>
       {{ indicationMessage }}
+      <button v-if="answerMode" @click="showLegendModal">See legend</button>
     </p>
-    <ChessBoard v-if="atLeastAGameStarted" size="65vmin" :fen="fen" :selectedCells="selectedCells" :correctCells="correctCells"
-      :wrongCells="wrongCells" :missingCells="missingCells" @cellClick="handleCellClick" :interactive="interactive" />
+    <ChessBoard v-if="atLeastAGameStarted" size="65vmin" :fen="fen" :selectedCells="selectedCells"
+      :correctCells="correctCells" :wrongCells="wrongCells" :missingCells="missingCells" @cellClick="handleCellClick"
+      :interactive="interactive" />
     <button @click="throwAction">{{ actionMessage }}</button>
+
+    <Teleport to="body">
+      <!-- use the modal component, pass in the prop -->
+      <modal :show="legendModalActive" @close="closeLegendModal">
+        <template #header>
+          <h3>Legend</h3>
+        </template>
+
+        <template #body>
+          <div class="legend-modal-body">
+            <div class="legend-color bg-green"></div>
+            <p>Correct</p>
+          </div>
+          <div class="legend-modal-body">
+            <div class="legend-color bg-red"></div>
+            <p>Wrong</p>
+          </div>
+          <div class="legend-modal-body">
+            <div class="legend-color bg-gray"></div>
+            <p>Missing</p>
+          </div>
+        </template>
+
+        <template #footer>
+          <div class="legend-footer">
+            <button @click="closeLegendModal">Close</button>
+          </div>
+        </template>
+      </modal>
+    </Teleport>
   </div>
 </template>
 
@@ -121,6 +163,40 @@ button:hover {
 button:active {
   border-color: #396cd8;
   background-color: #e8e8e8;
+}
+
+.legend-modal-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.legend-color {
+  display: block;
+  width: 5vmin;
+  height: 5vmin;
+  margin: 10px;
+  border: 2px solid black;
+}
+
+
+.legend-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-green {
+  background-color: green;
+}
+
+.bg-red {
+  background-color: red;
+}
+
+.bg-gray {
+  background-color: gray;
 }
 
 input,
