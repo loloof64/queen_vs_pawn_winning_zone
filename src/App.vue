@@ -5,6 +5,7 @@ import generate from "./core/generator";
 import Exercice from "./core/exercice";
 
 const interactive = ref(false);
+const answerMode = ref(false);
 const exercice: Ref<Exercice|null> = ref(null);
 const selectedCells: Ref<Array<string>> = ref([]);
 const correctCells: Ref<Array<string>> = ref([]);
@@ -27,9 +28,11 @@ function handleCellClick(cellStr: string) {
 function throwAction() {
   if (!atLeastAGameStarted.value) {
     startNewGame();
-    indicationMessage.value = "Please, select all correct cells.";
-    actionMessage.value = "Submit";
     atLeastAGameStarted.value = true;
+  } else if (answerMode.value) {
+    startNewGame();
+  } else {
+    showAnswer();
   }
 }
 
@@ -42,6 +45,19 @@ function startNewGame() {
   missingCells.value = [];
   fen.value = ex.fen;
   interactive.value = true;
+  answerMode.value = false;
+  actionMessage.value = "Submit";
+  indicationMessage.value = "Please, select all correct cells.";
+}
+
+function showAnswer() {
+  interactive.value = false;
+  answerMode.value = true;
+  correctCells.value = exercice.value?.getGoodCellsFromSubmission(selectedCells.value) ?? [];
+  wrongCells.value = exercice.value?.getWrongCellsFromSubmission(selectedCells.value) ?? [];
+  missingCells.value = exercice.value?.getMissingCellsFromSubmission(selectedCells.value) ?? [];
+  actionMessage.value = "New game";
+  indicationMessage.value = "Here's the answer.";
 }
 </script>
 
