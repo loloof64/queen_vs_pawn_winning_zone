@@ -11,6 +11,10 @@ const { size = "95vmin", fontSize = "3.2vmin",
     reversed = false, fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     selectedCells = [] } = defineProps<Props>()
 
+const emit = defineEmits<{
+    cellClick: [cell: string]
+}>()
+
 import WP from './vectors/Chess_plt45.svg';
 import WN from './vectors/Chess_nlt45.svg';
 import WB from './vectors/Chess_blt45.svg';
@@ -23,6 +27,10 @@ import BB from './vectors/Chess_bdt45.svg';
 import BR from './vectors/Chess_rdt45.svg';
 import BQ from './vectors/Chess_qdt45.svg';
 import BK from './vectors/Chess_kdt45.svg';
+
+function handleCellClick(cellStr: string) {
+    emit("cellClick", cellStr);
+}
 
 function isFileCoordinateLineFor(cellIndex: number): boolean {
     const lineIndex = Math.floor(cellIndex / 10);
@@ -45,8 +53,7 @@ function getRankCoordFor(cellIndex: number): string {
 }
 
 function isSelectedCell(cellIndex: number): boolean {
-    const [fileIndex, rankIndex] = getFileAndRankIndexesFor(cellIndex);
-    const cellStr = getCellStrFromIndexes(fileIndex, rankIndex);
+    const cellStr = getCellStrFromIndex(cellIndex);
     return selectedCells.includes(cellStr);
 }
 
@@ -123,7 +130,8 @@ function getCellsValues(): string[][] {
     return result;
 }
 
-function getCellStrFromIndexes(fileIndex: number, rankIndex: number): string {
+function getCellStrFromIndex(cellIndex: number): string {
+    const [fileIndex, rankIndex] = getFileAndRankIndexesFor(cellIndex);
     const fileStr = String.fromCharCode('a'.charCodeAt(0) + fileIndex);
     const rankStr = String.fromCharCode('1'.charCodeAt(0) + rankIndex);
     return `${fileStr}${rankStr}`;
@@ -139,7 +147,7 @@ function getCellStrFromIndexes(fileIndex: number, rankIndex: number): string {
                 'white-cell': isWhiteCell(cellIndex),
                 'black-cell': !isWhiteCell(cellIndex),
                 'selected-cell': isSelectedCell(cellIndex)
-            }">
+            }" @click="() => handleCellClick(getCellStrFromIndex(cellIndex))">
                 <img v-if="isOccupiedCellFor(cellIndex)" class="piece" :src="getPiecePathForCell(cellIndex)" />
             </div>
         </template>

@@ -1,10 +1,22 @@
 <script setup lang="ts">
+import {Ref, ref} from "vue";
 import ChessBoard from "@/components/chess_board/ChessBoard.vue";
+
+const selectedCells: Ref<Array<string>> = ref([]);
+
+function handleCellClick(cellStr: string) {
+  if (selectedCells.value.includes(cellStr)) {
+    selectedCells.value = selectedCells.value.filter((e) => e !== cellStr);
+  }
+  else {
+    selectedCells.value = [...selectedCells.value, cellStr];
+  }
+}
 </script>
 
 <template>
   <div id="main">
-    <ChessBoard size="80vmin" :selectedCells="['a4', 'g1']" />
+    <ChessBoard size="80vmin" :selectedCells="selectedCells" @cellClick="handleCellClick" />
     <button>Submit</button>
   </div>
 </template>
