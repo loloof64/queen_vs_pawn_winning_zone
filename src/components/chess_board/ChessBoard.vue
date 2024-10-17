@@ -5,12 +5,16 @@ interface Props {
     reversed?: boolean,
     fen?: String,
     selectedCells?: Array<String>,
+    correctCells?: Array<String>,
+    wrongCells?: Array<String>,
     interactive?: boolean,
 };
 
 const { size = "95vmin", fontSize = "3.2vmin",
     reversed = false, fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     selectedCells = [],
+    correctCells = [],
+    wrongCells = [],
     interactive = false } = defineProps<Props>()
 
 const emit = defineEmits<{
@@ -60,11 +64,22 @@ function isSelectedCell(cellIndex: number): boolean {
     return selectedCells.includes(cellStr);
 }
 
+function isCorrectCell(cellIndex: number): boolean {
+    const cellStr = getCellStrFromIndex(cellIndex);
+    return correctCells.includes(cellStr);
+}
+
+function isWrongCell(cellIndex: number): boolean {
+    const cellStr = getCellStrFromIndex(cellIndex);
+    return wrongCells.includes(cellStr);
+}
+
 function isWhiteCell(cellIndex: number): boolean {
     const row = Math.floor(cellIndex / 10);
     const col = cellIndex % 10;
     return (row + col) % 2 > 0;
 }
+
 
 function isOccupiedCellFor(cellIndex: number): boolean {
     return getCellValueFor(cellIndex).length > 0;
@@ -149,7 +164,9 @@ function getCellStrFromIndex(cellIndex: number): string {
             <div v-else class="cell" :class="{
                 'white-cell': isWhiteCell(cellIndex),
                 'black-cell': !isWhiteCell(cellIndex),
-                'selected-cell': isSelectedCell(cellIndex)
+                'selected-cell': isSelectedCell(cellIndex),
+                'correct-cell': isCorrectCell(cellIndex),
+                'wrong-cell': isWrongCell(cellIndex),
             }" @click="() => handleCellClick(getCellStrFromIndex(cellIndex))">
                 <img v-if="isOccupiedCellFor(cellIndex)" class="piece" :src="getPiecePathForCell(cellIndex)" />
             </div>
@@ -191,6 +208,14 @@ function getCellStrFromIndex(cellIndex: number): string {
 
 .selected-cell {
     background-color: purple;
+}
+
+.correct-cell {
+    background-color: green;
+}
+
+.wrong-cell {
+    background-color: red;
 }
 
 img.piece {

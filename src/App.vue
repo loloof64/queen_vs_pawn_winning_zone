@@ -17,7 +17,9 @@ function handleCellClick(cellStr: string) {
 <template>
   <div id="main">
     <ChessBoard size="80vmin" 
-    :selectedCells="selectedCells" 
+    :selectedCells="selectedCells"
+    :correctCells="['h2', 'f1']"
+    :wrongCells="['h2', 'c1']"
     @cellClick="handleCellClick"
     :interactive="false" />
     <button>Submit</button>
