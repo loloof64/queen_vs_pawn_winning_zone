@@ -7,57 +7,41 @@ interface Props {
 
 const { size = "95vmin", fontSize = "4vmin", reversed = false } = defineProps<Props>()
 
-function getMediumCellsArray(): string[] {
-    return new Array(80);
+function isFileCoordinateLineFor(cellIndex: number): boolean {
+    const lineIndex = Math.floor(cellIndex / 10);
+    return (lineIndex === 0) || (lineIndex === 9);
 }
 
-function isCoordIndex(index: number): boolean {
-    return (index % 10 == 0) || (index % 10 == 9);
+function getFileCoordFor(cellIndex: number): string {
+    const colIndex = cellIndex % 10;
+    return ["", "A", "B", "C", "D", "E", "F", "G", "H", ""][reversed ? 9 - colIndex : colIndex];
 }
 
-function cellIndexToRankCoord(index: number): string {
-    const baseIndex = Math.floor(index / 10);
-    return ["8", "7", "6", "5", "4", "3", "2", "1"][reversed ? 7 - baseIndex : baseIndex];
+function isRankCoordinateColFor(cellIndex: number): boolean {
+    const colIndex = cellIndex % 10;
+    return (colIndex === 0) || (colIndex === 9);
 }
 
-function getFileCoordForCol(index: number): string {
-    return ["A", "B", "C", "D", "E", "F", "G", "H"][reversed ? 7 - index : index];
+function getRankCoordFor(cellIndex: number): string {
+    const lineIndex = Math.floor(cellIndex / 10);
+    return ["", "8", "7", "6", "5", "4", "3", "2", "1", ""][reversed ? 9 - lineIndex : lineIndex];
 }
 
-function isWhiteCell(index: number): boolean {
-    const row = Math.floor(index / 10);
-    const col = index % 10;
+function isWhiteCell(cellIndex: number): boolean {
+    const row = Math.floor(cellIndex / 10);
+    const col = cellIndex % 10;
     return (row + col) % 2 > 0;
 }
 </script>
 
 <template>
     <div class="board_root">
-        <div>&nbsp;</div>
-        <div class="coord">{{getFileCoordForCol(0)}}</div>
-        <div class="coord">{{getFileCoordForCol(1)}}</div>
-        <div class="coord">{{getFileCoordForCol(2)}}</div>
-        <div class="coord">{{getFileCoordForCol(3)}}</div>
-        <div class="coord">{{getFileCoordForCol(4)}}</div>
-        <div class="coord">{{getFileCoordForCol(5)}}</div>
-        <div class="coord">{{getFileCoordForCol(6)}}</div>
-        <div class="coord">{{getFileCoordForCol(7)}}</div>
-        <div>&nbsp;</div>
-        <template v-for="(_, cellIndex) in getMediumCellsArray()">
-            <div class="coord" v-if="isCoordIndex(cellIndex)">{{ cellIndexToRankCoord(cellIndex) }}</div>
-            <div class="cell" v-else
+        <template v-for="(_, cellIndex) in new Array(100)">
+            <div v-if="isFileCoordinateLineFor(cellIndex)" class="coord">{{ getFileCoordFor(cellIndex) }}</div>
+            <div v-else-if="isRankCoordinateColFor(cellIndex)" class="coord">{{ getRankCoordFor(cellIndex) }}</div>
+            <div v-else class="cell"
                 :class="{ 'white-cell': isWhiteCell(cellIndex), 'black-cell': !isWhiteCell(cellIndex) }"></div>
         </template>
-        <div>&nbsp;</div>
-        <div class="coord">{{getFileCoordForCol(0)}}</div>
-        <div class="coord">{{getFileCoordForCol(1)}}</div>
-        <div class="coord">{{getFileCoordForCol(2)}}</div>
-        <div class="coord">{{getFileCoordForCol(3)}}</div>
-        <div class="coord">{{getFileCoordForCol(4)}}</div>
-        <div class="coord">{{getFileCoordForCol(5)}}</div>
-        <div class="coord">{{getFileCoordForCol(6)}}</div>
-        <div class="coord">{{getFileCoordForCol(7)}}</div>
-        <div>&nbsp;</div>
     </div>
 </template>
 
