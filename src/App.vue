@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import {Ref, ref} from "vue";
+import { Ref, ref } from "vue";
 import ChessBoard from "@/components/chess_board/ChessBoard.vue";
 
 const selectedCells: Ref<Array<string>> = ref([]);
+const atLeastAGameStarted = ref(false);
+const indicationMessage = ref("Please, start a new game.");
+const actionMessage = ref("Start a new game");
 
 function handleCellClick(cellStr: string) {
   if (selectedCells.value.includes(cellStr)) {
@@ -12,17 +15,29 @@ function handleCellClick(cellStr: string) {
     selectedCells.value = [...selectedCells.value, cellStr];
   }
 }
+
+function throwAction() {
+  if (!atLeastAGameStarted.value) {
+    startNewGame();
+    indicationMessage.value = "Please, select all correct cells.";
+    actionMessage.value = "Submit";
+    atLeastAGameStarted.value = true;
+  }
+}
+
+function startNewGame() {
+
+}
 </script>
 
 <template>
   <div id="main">
-    <ChessBoard size="80vmin" 
-    :selectedCells="selectedCells"
-    :correctCells="['h2', 'f1']"
-    :wrongCells="['h2', 'c1']"
-    @cellClick="handleCellClick"
-    :interactive="false" />
-    <button>Submit</button>
+    <p>
+      {{ indicationMessage }}
+    </p>
+    <ChessBoard v-if="atLeastAGameStarted" size="65vmin" :selectedCells="selectedCells" :correctCells="[]"
+      :wrongCells="[]" @cellClick="handleCellClick" :interactive="false" />
+    <button @click="throwAction">{{ actionMessage }}</button>
   </div>
 </template>
 
@@ -36,7 +51,9 @@ function handleCellClick(cellStr: string) {
 </style>
 
 <style>
-html, body, #app {
+html,
+body,
+#app {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -69,6 +86,7 @@ button {
 button:hover {
   border-color: #396cd8;
 }
+
 button:active {
   border-color: #396cd8;
   background-color: #e8e8e8;
@@ -90,9 +108,9 @@ button {
     color: #ffffff;
     background-color: #0f0f0f98;
   }
+
   button:active {
     background-color: #0f0f0f69;
   }
 }
-
 </style>
