@@ -4,9 +4,12 @@ interface Props {
     fontSize?: String,
     reversed?: boolean,
     fen?: String,
+    selectedCells?: Array<String>,
 };
 
-const { size = "95vmin", fontSize = "3.2vmin", reversed = false, fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" } = defineProps<Props>()
+const { size = "95vmin", fontSize = "3.2vmin",
+    reversed = false, fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    selectedCells = [] } = defineProps<Props>()
 
 import WP from './vectors/Chess_plt45.svg';
 import WN from './vectors/Chess_nlt45.svg';
@@ -41,6 +44,12 @@ function getRankCoordFor(cellIndex: number): string {
     return ["", "8", "7", "6", "5", "4", "3", "2", "1", ""][reversed ? 9 - lineIndex : lineIndex];
 }
 
+function isSelectedCell(cellIndex: number): boolean {
+    const [fileIndex, rankIndex] = getFileAndRankIndexesFor(cellIndex);
+    const cellStr = getCellStrFromIndexes(fileIndex, rankIndex);
+    return selectedCells.includes(cellStr);
+}
+
 function isWhiteCell(cellIndex: number): boolean {
     const row = Math.floor(cellIndex / 10);
     const col = cellIndex % 10;
@@ -72,6 +81,13 @@ function getPiecePathForCell(cellIndex: number): string {
 
 
 function getCellValueFor(cellIndex: number): string {
+    const cellsValues = getCellsValues();
+    const [fileIndex, rankIndex] = getFileAndRankIndexesFor(cellIndex);
+
+    return cellsValues[7 - rankIndex][fileIndex];
+}
+
+function getFileAndRankIndexesFor(cellIndex: number): [number, number] {
     const row = Math.floor(cellIndex / 10);
     const col = cellIndex % 10;
 
@@ -81,9 +97,7 @@ function getCellValueFor(cellIndex: number): string {
     const fileIndex = reversed ? 7 - realCol : realCol;
     const rankIndex = reversed ? realRow : 7 - realRow;
 
-    const cellsValues = getCellsValues();
-
-    return cellsValues[7 - rankIndex][fileIndex];
+    return [fileIndex, rankIndex];
 }
 
 function getCellsValues(): string[][] {
@@ -108,6 +122,12 @@ function getCellsValues(): string[][] {
     }
     return result;
 }
+
+function getCellStrFromIndexes(fileIndex: number, rankIndex: number): string {
+    const fileStr = String.fromCharCode('a'.charCodeAt(0) + fileIndex);
+    const rankStr = String.fromCharCode('1'.charCodeAt(0) + rankIndex);
+    return `${fileStr}${rankStr}`;
+}
 </script>
 
 <template>
@@ -115,8 +135,11 @@ function getCellsValues(): string[][] {
         <template v-for="(_, cellIndex) in new Array(100)">
             <div v-if="isFileCoordinateLineFor(cellIndex)" class="coord">{{ getFileCoordFor(cellIndex) }}</div>
             <div v-else-if="isRankCoordinateColFor(cellIndex)" class="coord">{{ getRankCoordFor(cellIndex) }}</div>
-            <div v-else class="cell"
-                :class="{ 'white-cell': isWhiteCell(cellIndex), 'black-cell': !isWhiteCell(cellIndex) }">
+            <div v-else class="cell" :class="{
+                'white-cell': isWhiteCell(cellIndex),
+                'black-cell': !isWhiteCell(cellIndex),
+                'selected-cell': isSelectedCell(cellIndex)
+            }">
                 <img v-if="isOccupiedCellFor(cellIndex)" class="piece" :src="getPiecePathForCell(cellIndex)" />
             </div>
         </template>
@@ -153,6 +176,10 @@ function getCellsValues(): string[][] {
 
 .black-cell {
     background-color: peru;
+}
+
+.selected-cell {
+    background-color: purple;
 }
 
 img.piece {
