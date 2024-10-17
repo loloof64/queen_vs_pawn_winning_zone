@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTranslation } from "i18next-vue";
+const { t } = useTranslation();
 import { Ref, ref } from "vue";
 import ChessBoard from "@/components/chess_board/ChessBoard.vue";
 import Modal from "@/components/Modal.vue";
@@ -14,8 +16,8 @@ const wrongCells: Ref<Array<string>> = ref([]);
 const missingCells: Ref<Array<string>> = ref([]);
 const fen = ref("");
 const atLeastAGameStarted = ref(false);
-const indicationMessage = ref("Please, start a new game.");
-const actionMessage = ref("Start a new game");
+const indicationMessage = ref(t("indication-start"));
+const actionMessage = ref(t("action-start"));
 const legendModalActive = ref(false);
 
 function handleCellClick(cellStr: string) {
@@ -48,8 +50,8 @@ function startNewGame() {
   fen.value = ex.fen;
   interactive.value = true;
   answerMode.value = false;
-  actionMessage.value = "Submit";
-  indicationMessage.value = "Please, select all correct cells.";
+  actionMessage.value = t("action-submit");
+  indicationMessage.value = t("indication-game");
 }
 
 function showAnswer() {
@@ -58,8 +60,8 @@ function showAnswer() {
   correctCells.value = exercice.value?.getGoodCellsFromSubmission(selectedCells.value) ?? [];
   wrongCells.value = exercice.value?.getWrongCellsFromSubmission(selectedCells.value) ?? [];
   missingCells.value = exercice.value?.getMissingCellsFromSubmission(selectedCells.value) ?? [];
-  actionMessage.value = "New game";
-  indicationMessage.value = "Here's the answer.";
+  actionMessage.value = t("action-start");
+  indicationMessage.value = t("indication-answer");
 }
 
 function showLegendModal() {
@@ -75,7 +77,7 @@ function closeLegendModal() {
   <div id="main">
     <p>
       {{ indicationMessage }}
-      <button v-if="answerMode" @click="showLegendModal">See legend</button>
+      <button v-if="answerMode" @click="showLegendModal">{{ t("action-see-legend") }}</button>
     </p>
     <ChessBoard v-if="atLeastAGameStarted" size="65vmin" :fen="fen" :selectedCells="selectedCells"
       :correctCells="correctCells" :wrongCells="wrongCells" :missingCells="missingCells" @cellClick="handleCellClick"
@@ -83,30 +85,29 @@ function closeLegendModal() {
     <button @click="throwAction">{{ actionMessage }}</button>
 
     <Teleport to="body">
-      <!-- use the modal component, pass in the prop -->
       <modal :show="legendModalActive" @close="closeLegendModal">
         <template #header>
-          <h3>Legend</h3>
+          <h3>{{ t("legend-title") }}</h3>
         </template>
 
         <template #body>
           <div class="legend-modal-body">
             <div class="legend-color bg-green"></div>
-            <p>Correct</p>
+            <p>{{  t("legend-correct") }}</p>
           </div>
           <div class="legend-modal-body">
             <div class="legend-color bg-red"></div>
-            <p>Wrong</p>
+            <p>{{  t("legend-wrong") }}</p>
           </div>
           <div class="legend-modal-body">
             <div class="legend-color bg-gray"></div>
-            <p>Missing</p>
+            <p>{{  t("legend-missing") }}</p>
           </div>
         </template>
 
         <template #footer>
           <div class="legend-footer">
-            <button @click="closeLegendModal">Close</button>
+            <button @click="closeLegendModal">{{ t("action-close-modal") }}</button>
           </div>
         </template>
       </modal>

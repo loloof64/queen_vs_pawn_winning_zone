@@ -14,6 +14,12 @@ importers:
       '@tauri-apps/plugin-shell':
         specifier: ^2
         version: 2.0.0
+      i18next:
+        specifier: ^23.16.0
+        version: 23.16.0
+      i18next-vue:
+        specifier: ^5.0.0
+        version: 5.0.0(i18next@23.16.0)(vue@3.5.12(typescript@5.6.3))
       vue:
         specifier: ^3.3.4
         version: 3.5.12(typescript@5.6.3)
@@ -48,6 +54,10 @@ packages:
     resolution: {integrity: sha512-HcttkxzdPucv3nNFmfOOMfFf64KgdJVqm1KaCm25dPGMLElo9nsLvXeJECQg8UzPuBGLyTSA0ZzqCtDSzKTEoQ==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+
+  '@babel/runtime@7.25.7':
+    resolution: {integrity: sha512-FjoyLe754PMiYsFaN5C94ttGiOmBNYTf6pLr4xXHAT5uctHb092PBszndLDR5XA/jghQvn4n7JMHl7dmTgbm9w==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/types@7.25.8':
     resolution: {integrity: sha512-JWtuCu8VQsMladxVz/P4HzHUGCAwpuqacmowgXFs5XjxIgKuNjnLokQzuVjlTvIzODaDmpjT3oxcC48vyk9EWg==}
@@ -440,6 +450,15 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
+  i18next-vue@5.0.0:
+    resolution: {integrity: sha512-8jlctdGSKws9fcFlGlFOQRKCQQdUTKSs4D9pbZ6iitpzHQzQSVTdeDPvrjxLomsTjLK65W+MUGW6cwavAMGo9w==}
+    peerDependencies:
+      i18next: '>=23'
+      vue: ^3.4.38
+
+  i18next@23.16.0:
+    resolution: {integrity: sha512-Ni3CG6c14teOogY19YNRl+kYaE/Rb59khy0VyHVn4uOZ97E2E/Yziyi6r3C3s9+wacjdLZiq/LLYyx+Cgd+FCw==}
+
   magic-string@0.30.12:
     resolution: {integrity: sha512-Ea8I3sQMVXr8JhN4z+H/d8zwo+tYDgHE9+5G4Wnrwhs0gaK9fXTKx0Tw5Xwsd/bCPTTZNRAdpyzvoeORe9LYpw==}
 
@@ -464,6 +483,9 @@ packages:
   postcss@8.4.47:
     resolution: {integrity: sha512-56rxCq7G/XfB4EkXq9Egn5GCqugWvDFjafDOThIdMBsI15iqPqR5r15TfSr1YPYeEI19YeaXMCbY6u88Y76GLQ==}
     engines: {node: ^10 || ^12 || >=14}
+
+  regenerator-runtime@0.14.1:
+    resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
 
   rollup@4.24.0:
     resolution: {integrity: sha512-DOmrlGSXNk1DM0ljiQA+i+o0rSLhtii1je5wgk60j49d1jHT5YYttBv1iWOnYSTG+fZZESUOSNiAl89SIet+Cg==}
@@ -545,6 +567,10 @@ snapshots:
   '@babel/parser@7.25.8':
     dependencies:
       '@babel/types': 7.25.8
+
+  '@babel/runtime@7.25.7':
+    dependencies:
+      regenerator-runtime: 0.14.1
 
   '@babel/types@7.25.8':
     dependencies:
@@ -858,6 +884,15 @@ snapshots:
 
   he@1.2.0: {}
 
+  i18next-vue@5.0.0(i18next@23.16.0)(vue@3.5.12(typescript@5.6.3)):
+    dependencies:
+      i18next: 23.16.0
+      vue: 3.5.12(typescript@5.6.3)
+
+  i18next@23.16.0:
+    dependencies:
+      '@babel/runtime': 7.25.7
+
   magic-string@0.30.12:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
@@ -879,6 +914,8 @@ snapshots:
       nanoid: 3.3.7
       picocolors: 1.1.0
       source-map-js: 1.2.1
+
+  regenerator-runtime@0.14.1: {}
 
   rollup@4.24.0:
     dependencies:
