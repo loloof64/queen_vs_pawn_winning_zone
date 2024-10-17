@@ -7,6 +7,7 @@ interface Props {
     selectedCells?: Array<String>,
     correctCells?: Array<String>,
     wrongCells?: Array<String>,
+    missingCells?: Array<String>,
     interactive?: boolean,
 };
 
@@ -15,6 +16,7 @@ const { size = "95vmin", fontSize = "3.2vmin",
     selectedCells = [],
     correctCells = [],
     wrongCells = [],
+    missingCells = [],
     interactive = false } = defineProps<Props>()
 
 const emit = defineEmits<{
@@ -72,6 +74,11 @@ function isCorrectCell(cellIndex: number): boolean {
 function isWrongCell(cellIndex: number): boolean {
     const cellStr = getCellStrFromIndex(cellIndex);
     return wrongCells.includes(cellStr);
+}
+
+function isMissingCell(cellIndex: number): boolean {
+    const cellStr = getCellStrFromIndex(cellIndex);
+    return missingCells.includes(cellStr);
 }
 
 function isWhiteCell(cellIndex: number): boolean {
@@ -167,6 +174,7 @@ function getCellStrFromIndex(cellIndex: number): string {
                 'selected-cell': isSelectedCell(cellIndex),
                 'correct-cell': isCorrectCell(cellIndex),
                 'wrong-cell': isWrongCell(cellIndex),
+                'missing-cell': isMissingCell(cellIndex),
             }" @click="() => handleCellClick(getCellStrFromIndex(cellIndex))">
                 <img v-if="isOccupiedCellFor(cellIndex)" class="piece" :src="getPiecePathForCell(cellIndex)" />
             </div>
@@ -216,6 +224,10 @@ function getCellStrFromIndex(cellIndex: number): string {
 
 .wrong-cell {
     background-color: red;
+}
+
+.missing-cell {
+    background-color: gray;
 }
 
 img.piece {

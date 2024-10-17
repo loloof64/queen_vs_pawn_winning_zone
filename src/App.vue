@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import { Ref, ref } from "vue";
 import ChessBoard from "@/components/chess_board/ChessBoard.vue";
+import generate from "./core/generator";
+import Exercice from "./core/exercice";
 
+const interactive = ref(false);
+const exercice: Ref<Exercice|null> = ref(null);
 const selectedCells: Ref<Array<string>> = ref([]);
+const correctCells: Ref<Array<string>> = ref([]);
+const wrongCells: Ref<Array<string>> = ref([]);
+const missingCells: Ref<Array<string>> = ref([]);
+const fen = ref("");
 const atLeastAGameStarted = ref(false);
 const indicationMessage = ref("Please, start a new game.");
 const actionMessage = ref("Start a new game");
@@ -26,7 +34,14 @@ function throwAction() {
 }
 
 function startNewGame() {
-
+  const ex = generate();
+  exercice.value = ex;
+  selectedCells.value = [];
+  correctCells.value = [];
+  wrongCells.value = [];
+  missingCells.value = [];
+  fen.value = ex.fen;
+  interactive.value = true;
 }
 </script>
 
@@ -35,8 +50,8 @@ function startNewGame() {
     <p>
       {{ indicationMessage }}
     </p>
-    <ChessBoard v-if="atLeastAGameStarted" size="65vmin" :selectedCells="selectedCells" :correctCells="[]"
-      :wrongCells="[]" @cellClick="handleCellClick" :interactive="false" />
+    <ChessBoard v-if="atLeastAGameStarted" size="65vmin" :fen="fen" :selectedCells="selectedCells" :correctCells="correctCells"
+      :wrongCells="wrongCells" :missingCells="missingCells" @cellClick="handleCellClick" :interactive="interactive" />
     <button @click="throwAction">{{ actionMessage }}</button>
   </div>
 </template>
