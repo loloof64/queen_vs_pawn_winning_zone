@@ -5,11 +5,13 @@ interface Props {
     reversed?: boolean,
     fen?: String,
     selectedCells?: Array<String>,
+    interactive?: boolean,
 };
 
 const { size = "95vmin", fontSize = "3.2vmin",
     reversed = false, fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-    selectedCells = [] } = defineProps<Props>()
+    selectedCells = [],
+    interactive = false } = defineProps<Props>()
 
 const emit = defineEmits<{
     cellClick: [cell: string]
@@ -29,6 +31,7 @@ import BQ from './vectors/Chess_qdt45.svg';
 import BK from './vectors/Chess_kdt45.svg';
 
 function handleCellClick(cellStr: string) {
+    if (!interactive) return;
     emit("cellClick", cellStr);
 }
 
