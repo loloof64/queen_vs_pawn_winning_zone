@@ -15,10 +15,10 @@ val tauriProperties = Properties().apply {
 
 android {
     compileSdk = 34
-    namespace = "com.loloof64.queen_vs_pawn_winning_zone"
+    namespace = "com.loloof64.QueenVsPawnWinningZone"
     defaultConfig {
         manifestPlaceholders["usesCleartextTraffic"] = "false"
-        applicationId = "com.loloof64.queen_vs_pawn_winning_zone"
+        applicationId = "com.loloof64.QueenVsPawnWinningZone"
         minSdk = 24
         targetSdk = 34
         versionCode = tauriProperties.getProperty("tauri.android.versionCode", "1").toInt()
