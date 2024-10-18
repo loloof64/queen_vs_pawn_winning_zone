@@ -2,6 +2,12 @@
 
 Find the winning zone for the king in the Queen vs Pawn chess endgame.
 
+## What is the goal ?
+
+In this application, the goal is to check if you know the exception cases of the Queen and King vs Pawn and King endgame of chess.
+
+Particularly, if you know from which distance from the ennemy pawn the king of the strong side can help the queen to stop the pawn or even better deliver checkmate.
+
 ## For developers
 
 ### Install prerequesites
